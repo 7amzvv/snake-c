@@ -1,0 +1,5 @@
+snake
+*.exe
+*.o
+lib/
+build/
