@@ -4,21 +4,74 @@
 #define LIGNES 15
 #define TAILLE_CASE 30
 #define MARGE_HAUT 60
+#define DELAI_DEPLACEMENT 0.15f
 
 int main(void)
 {
     int serpent_x = COLONNES / 2;
     int serpent_y = LIGNES / 2;
+    int direction_x = 0;
+    int direction_y = 0;
+    float temps = 0.0f;
+    bool perdu = false;
 
     InitWindow(COLONNES * TAILLE_CASE,
                LIGNES * TAILLE_CASE + MARGE_HAUT, "Snake");
     SetTargetFPS(60);
 
     while (!WindowShouldClose()) {
+        if (perdu && IsKeyPressed(KEY_R)) {
+            serpent_x = COLONNES / 2;
+            serpent_y = LIGNES / 2;
+            direction_x = 0;
+            direction_y = 0;
+            temps = 0.0f;
+            perdu = false;
+        }
+
+        if (!perdu) {
+            if (IsKeyPressed(KEY_RIGHT)) {
+                direction_x = 1;
+                direction_y = 0;
+            } else if (IsKeyPressed(KEY_LEFT)) {
+                direction_x = -1;
+                direction_y = 0;
+            } else if (IsKeyPressed(KEY_UP)) {
+                direction_x = 0;
+                direction_y = -1;
+            } else if (IsKeyPressed(KEY_DOWN)) {
+                direction_x = 0;
+                direction_y = 1;
+            }
+
+            if (direction_x != 0 || direction_y != 0) {
+                temps += GetFrameTime();
+
+                while (temps >= DELAI_DEPLACEMENT && !perdu) {
+                    temps -= DELAI_DEPLACEMENT;
+                    int prochain_x = serpent_x + direction_x;
+                    int prochain_y = serpent_y + direction_y;
+
+                    if (prochain_x <= 0 || prochain_x >= COLONNES - 1 ||
+                        prochain_y <= 0 || prochain_y >= LIGNES - 1) {
+                        perdu = true;
+                    } else {
+                        serpent_x = prochain_x;
+                        serpent_y = prochain_y;
+                    }
+                }
+            }
+        }
+
         BeginDrawing();
         ClearBackground((Color){20, 24, 32, 255});
         DrawText("SNAKE", 20, 18, 28, LIME);
-        DrawText("Etape 2 : le terrain", 170, 25, 18, RAYWHITE);
+
+        if (perdu) {
+            DrawText("Perdu ! R pour rejouer", 170, 25, 18, RED);
+        } else {
+            DrawText("Fleches pour se deplacer", 170, 25, 18, RAYWHITE);
+        }
 
         for (int y = 0; y < LIGNES; y++) {
             for (int x = 0; x < COLONNES; x++) {
