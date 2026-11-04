@@ -14,7 +14,6 @@ int main(void)
                LIGNES * TAILLE_CASE + MARGE_HAUT, "Snake");
     SetTargetFPS(60);
 
-    /* La fenetre reste ouverte jusqu'a Echap ou un clic sur la croix. */
     while (!WindowShouldClose()) {
         BeginDrawing();
         ClearBackground((Color){20, 24, 32, 255});
@@ -26,7 +25,6 @@ int main(void)
                 int pixel_x = x * TAILLE_CASE;
                 int pixel_y = y * TAILLE_CASE + MARGE_HAUT;
 
-                /* On convertit les cases de la grille en pixels. */
                 if (x == 0 || x == COLONNES - 1 ||
                     y == 0 || y == LIGNES - 1) {
                     DrawRectangle(pixel_x, pixel_y,
