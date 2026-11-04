@@ -6,7 +6,7 @@
 #define TAILLE_CASE 30
 #define MARGE_HAUT 60
 #define MAX_CASES ((COLONNES - 2) * (LIGNES - 2))
-#define DELAI_DEPLACEMENT 0.15f
+#define DELAI_DEPLACEMENT 0.30f
 
 typedef struct { int x; int y; } Case;
 
@@ -55,7 +55,7 @@ void placer_nourriture(Jeu *jeu)
 void nouvelle_partie(Jeu *jeu)
 {
     *jeu = (Jeu){0};
-    jeu->taille = 3;
+    jeu->taille = 1;
     for (int i = 0; i < jeu->taille; i++)
         jeu->corps[i] = (Case){COLONNES / 2 - i, LIGNES / 2};
     placer_nourriture(jeu);
@@ -144,7 +144,7 @@ int main(void)
                 else if (IsKeyPressed(KEY_DOWN)) { dx = 0; dy = 1; }
                 Case prochaine = {jeu.corps[0].x + dx, jeu.corps[0].y + dy};
                 if ((dx != jeu.dx || dy != jeu.dy) &&
-                    !meme_case(prochaine, jeu.corps[1])) {
+                    (jeu.taille == 1 || !meme_case(prochaine, jeu.corps[1]))) {
                     jeu.dx = dx;
                     jeu.dy = dy;
                     direction_changee = true;
